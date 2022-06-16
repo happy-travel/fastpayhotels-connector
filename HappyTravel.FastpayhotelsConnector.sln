@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyTravel.FastpayhotelsCo
 		{A1246886-3487-435F-B3C8-EE1A798401A3} = {A1246886-3487-435F-B3C8-EE1A798401A3}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyTravel.FastpayhotelsConnector.Common", "HappyTravel.FastpayhotelsConnector.Common\HappyTravel.FastpayhotelsConnector.Common.csproj", "{A4EF023C-38D2-42F4-BFEC-E04ECBDF21DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyTravel.FastpayhotelsConnector.Common", "HappyTravel.FastpayhotelsConnector.Common\HappyTravel.FastpayhotelsConnector.Common.csproj", "{A4EF023C-38D2-42F4-BFEC-E04ECBDF21DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyTravel.FastpayhotelsConnector.Data", "HappyTravel.FastpayhotelsConnector.Data\HappyTravel.FastpayhotelsConnector.Data.csproj", "{A1246886-3487-435F-B3C8-EE1A798401A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyTravel.FastpayhotelsConnector.Data", "HappyTravel.FastpayhotelsConnector.Data\HappyTravel.FastpayhotelsConnector.Data.csproj", "{A1246886-3487-435F-B3C8-EE1A798401A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyTravel.FastpayhotelsConnector.Api", "HappyTravel.FastpayhotelsConnector.Api\HappyTravel.FastpayhotelsConnector.Api.csproj", "{D241606F-FF16-4A9A-BE56-0705618FE1A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{A1246886-3487-435F-B3C8-EE1A798401A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1246886-3487-435F-B3C8-EE1A798401A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1246886-3487-435F-B3C8-EE1A798401A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D241606F-FF16-4A9A-BE56-0705618FE1A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D241606F-FF16-4A9A-BE56-0705618FE1A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D241606F-FF16-4A9A-BE56-0705618FE1A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D241606F-FF16-4A9A-BE56-0705618FE1A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
