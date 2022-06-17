@@ -1,6 +1,8 @@
 ﻿using HappyTravel.FastpayhotelsConnector.Common;
 using HappyTravel.FastpayhotelsConnector.Common.Models;
+using HappyTravel.FastpayhotelsConnector.Common.Models.Hotel;
 using HappyTravel.FastpayhotelsConnector.Updater.Infrastructure;
+using HappyTravel.FastpayhotelsConnector.Updater.Models;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Text;
@@ -14,7 +16,23 @@ public class FastpayhotelsContentClient
         _httpClientFactory = httpClientFactory;
         _serializer = serializer;
         _apiConnection = apiConnection.Value;
-    }    
+    }
+
+
+    public Task<HotelListResponse> GetHotelList(HotelListRequest request, CancellationToken cancellationToken)
+    {
+        var url = $"{_apiConnection.CatalogueUrl}/api/hotel/list";
+
+        return Post<HotelListRequest, HotelListResponse>(new Uri(url, UriKind.Absolute), request, cancellationToken);
+    }
+
+
+    public Task<HotelDetailsResponse> GetHotelDetails(HotelDetailsRequest request, CancellationToken cancellationToken)
+    {
+        var url = $"{_apiConnection.CatalogueUrl}/api/hotel/details";
+
+        return Post<HotelDetailsRequest, HotelDetailsResponse>(new Uri(url, UriKind.Absolute), request, cancellationToken);
+    }
 
 
     private Task<TResponse> Post<TRequest, TResponse>(Uri url, TRequest requestContent, CancellationToken cancellationToken)
