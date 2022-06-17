@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace HappyTravel.FastpayhotelsConnector.Data;
 
-internal class FastpayhotelsContextFactory : IDesignTimeDbContextFactory<FastpayhotelsContext>
+public class FastpayhotelsContextFactory : IDesignTimeDbContextFactory<FastpayhotelsContext>
 {
     public FastpayhotelsContext CreateDbContext(string[] args)
     {
