@@ -13,6 +13,7 @@ public class FastpayhotelsContext : DbContext
     
     public DbSet<StaticDataUpdateHistoryEntry> StaticDataUpdateHistory { get; set; }
     public DbSet<Hotel> Hotels { get; set; }
+    public DbSet<Accommodation> Accommodations { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -21,6 +22,11 @@ public class FastpayhotelsContext : DbContext
             c.HasKey(c => c.Code);
             c.Property(r => r.Data).HasColumnType("jsonb");
             c.Property(p => p.IsActive).HasDefaultValue(true);
+        });
+
+        builder.Entity<Accommodation>(c =>
+        {
+            c.HasKey(c => c.Code);
         });
     }
 }

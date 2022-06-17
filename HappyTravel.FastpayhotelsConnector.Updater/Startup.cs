@@ -46,6 +46,7 @@ public class Startup
         services.AddTransient<HotelLoader>();
         services.AddTransient<HotelUpdater>();
         services.AddTransient<UpdateHistoryService>();
+        services.AddTransient<AccommodationUpdater>();
 
         services.AddHostedService<StaticDataUpdateHostedService>();
         services.AddTransient<DateTimeProvider>();
@@ -75,6 +76,7 @@ public class Startup
         if (string.IsNullOrWhiteSpace(workersToRun))
         {
             services.AddTransient<IUpdateWorker, HotelLoader>();
+            services.AddTransient<IUpdateWorker, AccommodationUpdater>();
         }
         else
         {
@@ -82,7 +84,8 @@ public class Startup
             {                
                 if (workerName == nameof(HotelLoader))
                     services.AddTransient<IUpdateWorker, HotelLoader>();
-
+                if (workerName == nameof(HotelLoader))
+                    services.AddTransient<IUpdateWorker, AccommodationUpdater>();
             }
         }
     }

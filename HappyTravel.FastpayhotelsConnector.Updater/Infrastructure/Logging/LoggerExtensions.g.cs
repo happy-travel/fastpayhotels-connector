@@ -32,8 +32,20 @@ public static partial class LoggerExtensions
     [LoggerMessage(40009, LogLevel.Information, "Finish raw data update with id '{updateId}'")]
     static partial void FinishHotelsUpdate(ILogger logger, int updateId);
     
-    [LoggerMessage(40010, LogLevel.Error, "Hotel load exception with id {hotelId}: ")]
-    static partial void HotelLoadException(ILogger logger, System.Exception exception, int hotelId);
+    [LoggerMessage(40010, LogLevel.Error, "Hotel load exception with code {hotelCode}: ")]
+    static partial void HotelLoadException(ILogger logger, System.Exception exception, string hotelCode);
+    
+    [LoggerMessage(40011, LogLevel.Information, "Starting accommodation updater")]
+    static partial void StartingAccommodationUpdater(ILogger logger);
+    
+    [LoggerMessage(40012, LogLevel.Critical, "Accommodation updater: ")]
+    static partial void AccommodationUpdaterException(ILogger logger, System.Exception exception);
+    
+    [LoggerMessage(40013, LogLevel.Information, "Get hotels from DB. From {i} to {batchSizeInc}")]
+    static partial void AccommodationUpdaterGetHotels(ILogger logger, int i, int batchSizeInc);
+    
+    [LoggerMessage(40014, LogLevel.Error, "Get hotel timezone with code {hotelId}:")]
+    static partial void HotelTimezoneError(ILogger logger, string hotelId);
     
     
     
@@ -64,6 +76,18 @@ public static partial class LoggerExtensions
     public static void LogFinishHotelsUpdate(this ILogger logger, int updateId)
         => FinishHotelsUpdate(logger, updateId);
     
-    public static void LogHotelLoadException(this ILogger logger, System.Exception exception, int hotelId)
-        => HotelLoadException(logger, exception, hotelId);
+    public static void LogHotelLoadException(this ILogger logger, System.Exception exception, string hotelCode)
+        => HotelLoadException(logger, exception, hotelCode);
+    
+    public static void LogStartingAccommodationUpdater(this ILogger logger)
+        => StartingAccommodationUpdater(logger);
+    
+    public static void LogAccommodationUpdaterException(this ILogger logger, System.Exception exception)
+        => AccommodationUpdaterException(logger, exception);
+    
+    public static void LogAccommodationUpdaterGetHotels(this ILogger logger, int i, int batchSizeInc)
+        => AccommodationUpdaterGetHotels(logger, i, batchSizeInc);
+    
+    public static void LogHotelTimezoneError(this ILogger logger, string hotelId)
+        => HotelTimezoneError(logger, hotelId);
 }
