@@ -9,4 +9,5 @@ public static class Constants
     public const string HeaderUser = "username";
     public const string HeaderPassword = "password";
     public const string ApiVersion = "1";
+    public static readonly string[] Languages = new[] { "ar", "en", "ru", "bg", "de", "el", "es", "fr", "it", "hu", "pl", "pt", "ro", "sr", "tr" };
 }
