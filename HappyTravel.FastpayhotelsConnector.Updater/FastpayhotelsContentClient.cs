@@ -1,5 +1,6 @@
 ﻿using HappyTravel.FastpayhotelsConnector.Common;
 using HappyTravel.FastpayhotelsConnector.Common.Models;
+using HappyTravel.FastpayhotelsConnector.Common.Models.Catalogue;
 using HappyTravel.FastpayhotelsConnector.Common.Models.Hotel;
 using HappyTravel.FastpayhotelsConnector.Updater.Infrastructure;
 using HappyTravel.FastpayhotelsConnector.Updater.Models;
@@ -16,6 +17,14 @@ public class FastpayhotelsContentClient
         _httpClientFactory = httpClientFactory;
         _serializer = serializer;
         _apiConnection = apiConnection.Value;
+    }
+
+
+    public Task<CatalogueResponse> GetCatalogue(CatalogueRequest request, CancellationToken cancellationToken)
+    {
+        var url = $"{_apiConnection.CatalogueUrl}/api/hotel/catalogue";
+
+        return Post<CatalogueRequest, CatalogueResponse>(new Uri(url, UriKind.Absolute), request, cancellationToken);
     }
 
 
