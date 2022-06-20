@@ -1,4 +1,3 @@
-using System.Reflection;
 using HappyTravel.BaseConnector.Api.Infrastructure.Environment;
 using HappyTravel.BaseConnector.Api.Infrastructure.Extensions;
 using HappyTravel.BaseConnector.Api.Services.Accommodations;
@@ -16,9 +15,9 @@ using HappyTravel.FastpayhotelsConnector.Api.Services.Availabilities.RoomContrac
 using HappyTravel.FastpayhotelsConnector.Api.Services.Availabilities.WideAvailabilities;
 using HappyTravel.FastpayhotelsConnector.Api.Services.Bookings;
 using HappyTravel.FastpayhotelsConnector.Api.Services.Locations;
+using HappyTravel.FastpayhotelsConnector.Data;
 using HappyTravel.HttpRequestLogger;
 using HappyTravel.VaultClient;
-using Microsoft.OpenApi.Models;
 
 namespace HappyTravel.FastpayhotelsConnector.Api.Infrastructure.Extensions;
 
@@ -26,9 +25,6 @@ public static class ServicesConfigurationExtensions
 {
     public static void ConfigureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddControllers();
-        builder.Services.AddProblemDetailsErrorHandling();
-
         using var vaultClient = new VaultClient.VaultClient(new VaultOptions
         {
             BaseUrl = new Uri(EnvironmentVariableHelper.Get("Vault:Endpoint", builder.Configuration) ??
@@ -51,43 +47,11 @@ public static class ServicesConfigurationExtensions
           .AddTransient<IBookingService, BookingService>()
           .AddTransient<ILocationService, LocationService>();
 
-        builder.Services.AddHealthChecks();
+        builder.Services.AddHealthChecks()
+            .AddDbContextCheck<FastpayhotelsContext>();
 
-        builder.Services.AddSwaggerGen(options =>
-        {
-            options.SwaggerDoc("v1.0", new OpenApiInfo { Title = "HappyTravel.com Fastpayhotels API", Version = "v1.0" });
-
-            var xmlCommentsFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlCommentsFilePath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFileName);
-
-            options.IncludeXmlComments(xmlCommentsFilePath);
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey
-            });
-
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        },
-                        Scheme = "oauth2",
-                        Name = "Bearer",
-                        In = ParameterLocation.Header,
-                    },
-                    Array.Empty<string>()
-                }
-            });
-        });
-
-        builder.Services.AddSwaggerGenNewtonsoftSupport();
+        builder.Services.AddProblemDetailsErrorHandling()
+            .ConfigureSwagger()
+            .ConfigureDatabaseOptions(vaultClient, builder.Configuration);
     }
 }
