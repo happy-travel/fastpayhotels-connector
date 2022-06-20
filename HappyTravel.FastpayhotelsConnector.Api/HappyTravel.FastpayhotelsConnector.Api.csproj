@@ -8,11 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="HappyTravel.BaseConnector.Api" Version="1.6.1" />
+    <PackageReference Include="HappyTravel.HttpRequestAuditLogger" Version="1.4.2" />
     <PackageReference Include="HappyTravel.HttpRequestLogger" Version="1.0.5" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.6" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HappyTravel.FastpayhotelsConnector.Common\HappyTravel.FastpayhotelsConnector.Common.csproj" />
     <ProjectReference Include="..\HappyTravel.FastpayhotelsConnector.Data\HappyTravel.FastpayhotelsConnector.Data.csproj" />
   </ItemGroup>
 
