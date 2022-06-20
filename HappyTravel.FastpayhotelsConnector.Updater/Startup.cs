@@ -32,12 +32,12 @@ public class Startup
         {
             client.BaseAddress = new Uri(apiConnectionOptions["catalogueUrl"]);            
         })
-        .AddHttpMessageHandler<TokenAuthHeaderHandler>();
+        .AddHttpMessageHandler<CatalogueTokenAuthHeaderHandler>();
 
         services.AddTransient<FastpayhotelsContext>();
         services.AddTransient<FastpayhotelsContentClient>();
         services.AddTransient<FastpayhotelsSerializer>();        
-        services.AddTransient<TokenAuthHeaderHandler>();
+        services.AddTransient<CatalogueTokenAuthHeaderHandler>();
         services.AddTransient<TokenProvider>();        
 
         ConfigureWorkers(services);
@@ -50,7 +50,7 @@ public class Startup
             o.ClientSecret = apiConnectionOptions["clientSecret"];
             o.User = apiConnectionOptions["user"];
             o.Password = apiConnectionOptions["password"];
-            o.CatalogueUrl = apiConnectionOptions["catalogueUrl"];
+            o.CatalogueEndPoint = apiConnectionOptions["catalogueUrl"];
         });
     }
 

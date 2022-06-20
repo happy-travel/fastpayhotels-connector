@@ -2,9 +2,9 @@
 
 public class ApiConnection
 {
-    public string CatalogueUrl { get; set; }
-    public string AvailUrl { get; set; }
-    public string BookingUrl { get; set; }
+    public string AvailabilityEndPoint { get; set; }
+    public string BookingEndPoint { get; set; }
+    public string CatalogueEndPoint { get; set; }    
     public string ClientId { get; set; }
     public string ClientSecret { get; set; }
     public string User { get; set; }
