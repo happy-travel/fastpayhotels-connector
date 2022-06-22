@@ -12,23 +12,22 @@ public class TokenProvider
     }
 
 
-    public async Task<string> GetAccessTokenAsync()
+    public async Task<string> GetAccessTokenAsync(FastpayhotelsHttpClients fastpayhotelsHttpClient)
     {
         HttpClient client = new HttpClient()
         {
-            BaseAddress = new Uri(_apiConnection.CatalogueUrl)
+            BaseAddress = new Uri(GetBaseAddres())
         };
 
-        var contentValues = new List<KeyValuePair<string, string>>();
-        contentValues.Add(new KeyValuePair<string, string>(Constants.HeaderGrandtype, HeaderGrandtypeValue));
-        contentValues.Add(new KeyValuePair<string, string>(Constants.HeaderClientId, _apiConnection.ClientId));
-        contentValues.Add(new KeyValuePair<string, string>(Constants.HeaderClientSecret, _apiConnection.ClientSecret));
-        contentValues.Add(new KeyValuePair<string, string>(Constants.HeaderVersion, Constants.ApiVersion));
-        contentValues.Add(new KeyValuePair<string, string>(Constants.HeaderUser, _apiConnection.User));
-        contentValues.Add(new KeyValuePair<string, string>(Constants.HeaderPassword, _apiConnection.Password));
-
-
-        var content = new FormUrlEncodedContent(contentValues);        
+        var content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>()
+        {
+            new KeyValuePair<string, string>(Constants.HeaderGrandtype, HeaderGrandtypeValue),
+            new KeyValuePair<string, string>(Constants.HeaderClientId, _apiConnection.ClientId),
+            new KeyValuePair<string, string>(Constants.HeaderClientSecret, _apiConnection.ClientSecret),
+            new KeyValuePair<string, string>(Constants.HeaderVersion, Constants.ApiVersion),
+            new KeyValuePair<string, string>(Constants.HeaderUser, _apiConnection.User),
+            new KeyValuePair<string, string>(Constants.HeaderPassword, _apiConnection.Password)
+        });      
 
         var request = new HttpRequestMessage(HttpMethod.Post, new Uri(TokenUrl, UriKind.Relative))
         { 
@@ -48,6 +47,16 @@ public class TokenProvider
         }
 
         throw new Exception($"Failed Authentication, StatusCode: {response.StatusCode}, {response.RequestMessage}");
+
+
+        string GetBaseAddres()
+            => fastpayhotelsHttpClient switch
+            {
+                FastpayhotelsHttpClients.AvailabilityHttpClient => _apiConnection.AvailabilityEndPoint,
+                FastpayhotelsHttpClients.BookingHttpClient => _apiConnection.BookingEndPoint,
+                FastpayhotelsHttpClients.CatalogueHttpClient => _apiConnection.CatalogueEndPoint,
+                _ => _apiConnection.AvailabilityEndPoint,
+            };
     }
 
 
