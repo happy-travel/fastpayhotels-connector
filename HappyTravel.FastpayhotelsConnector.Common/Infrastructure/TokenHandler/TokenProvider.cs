@@ -25,7 +25,7 @@ public class TokenProvider
             new KeyValuePair<string, string>(Constants.HeaderClientId, _apiConnection.ClientId),
             new KeyValuePair<string, string>(Constants.HeaderClientSecret, _apiConnection.ClientSecret),
             new KeyValuePair<string, string>(Constants.HeaderVersion, Constants.ApiVersion),
-            new KeyValuePair<string, string>(Constants.HeaderUser, _apiConnection.User),
+            new KeyValuePair<string, string>(Constants.HeaderUser, _apiConnection.UserName),
             new KeyValuePair<string, string>(Constants.HeaderPassword, _apiConnection.Password)
         });      
 
