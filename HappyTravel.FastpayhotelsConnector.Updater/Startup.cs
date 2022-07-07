@@ -48,7 +48,7 @@ public class Startup
         {
             o.ClientId = apiConnectionOptions["clientId"];
             o.ClientSecret = apiConnectionOptions["clientSecret"];
-            o.User = apiConnectionOptions["user"];
+            o.UserName = apiConnectionOptions["userName"];
             o.Password = apiConnectionOptions["password"];
             o.CatalogueEndPoint = apiConnectionOptions["catalogueEndPoint"];
         });
