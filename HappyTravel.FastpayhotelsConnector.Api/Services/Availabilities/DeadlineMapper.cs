@@ -21,11 +21,15 @@ public static class DeadlineMapper
         if (FreeCancellationCodes.Contains(code))
             return new Deadline(date: default, remarks: remarks);
 
-        var deadlineHourStr = code.Split('#').LastOrDefault();
-        if (deadlineHourStr is not null)
+        var deadlineHourStr = string.Empty;
+        if (code.Contains('#'))
+        {
+            deadlineHourStr = code.Split('#').Last();
             code = code.RemoveAll($"#{deadlineHourStr}");
+        }
         else
             deadlineHourStr = Constants.DefaultDeadlineTime;
+               
         var deadlineHour = DateTimeOffset.Parse(deadlineHourStr).Hour;
                 
         foreach (var apiPolicy in code.Split('_'))
