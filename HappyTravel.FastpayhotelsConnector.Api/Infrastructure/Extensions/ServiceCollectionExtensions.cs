@@ -1,7 +1,13 @@
-﻿using HappyTravel.FastpayhotelsConnector.Data;
+﻿using HappyTravel.FastpayhotelsConnector.Api.Services;
+using HappyTravel.FastpayhotelsConnector.Common.Infrastructure.TokenHandler;
+using HappyTravel.FastpayhotelsConnector.Common.Models;
+using HappyTravel.FastpayhotelsConnector.Data;
+using HappyTravel.HttpRequestAuditLogger.Extensions;
+using HappyTravel.HttpRequestLogger;
 using HappyTravel.VaultClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 using System.Reflection;
 
 namespace HappyTravel.FastpayhotelsConnector.Api.Infrastructure.Extensions;
@@ -66,5 +72,46 @@ public static class ServiceCollectionExtensions
             options.EnableSensitiveDataLogging(false);
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }, ServiceLifetime.Transient, ServiceLifetime.Transient);
+    }
+
+
+    public static IServiceCollection ConfigureHttpClients(this IServiceCollection services, IVaultClient vaultClient, IConfiguration configuration)
+    {
+        var apiConnectionOptions = vaultClient.Get($"{Connector.Name}/api-connection").GetAwaiter().GetResult();
+        var fukuokaOptions = vaultClient.Get(configuration["Fukuoka:Options"]).GetAwaiter().GetResult();
+
+        ConfigureApiConnectionOptions();
+        ConfigureAvailabilityHttpClient();
+
+        return services.AddTransient<FastpayhotelsShoppingClient>()
+            .AddTransient<AvailabilityTokenAuthHeaderHandler>()
+            .AddTransient<TokenProvider>();
+
+
+        void ConfigureApiConnectionOptions()
+            => services.Configure<ApiConnection>(o =>
+            {
+                o.AvailabilityEndPoint = apiConnectionOptions["availabilityEndPoint"];
+                o.ClientId = apiConnectionOptions["clientId"];
+                o.ClientSecret = apiConnectionOptions["clientSecret"];
+                o.User = apiConnectionOptions["userName"];
+                o.Password = apiConnectionOptions["password"];
+            });
+
+
+        void ConfigureAvailabilityHttpClient()
+        {
+            services.AddHttpClient(HttpClientNames.FastpayhotelsAvailabilityClient, client =>
+            {
+                client.BaseAddress = new Uri(apiConnectionOptions["availabilityEndPoint"]);
+            })
+            .AddHttpMessageHandler<AvailabilityTokenAuthHeaderHandler>()
+            .AddHttpClientRequestLogging(configuration: configuration)
+            .UseHttpClientMetrics()
+            .AddHttpRequestAudit(options =>
+            {
+                options.Endpoint = fukuokaOptions["endpoint"];
+            });
+        }
     }
 }
