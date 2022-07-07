@@ -94,7 +94,7 @@ public static class ServiceCollectionExtensions
                 o.AvailabilityEndPoint = apiConnectionOptions["availabilityEndPoint"];
                 o.ClientId = apiConnectionOptions["clientId"];
                 o.ClientSecret = apiConnectionOptions["clientSecret"];
-                o.User = apiConnectionOptions["userName"];
+                o.UserName = apiConnectionOptions["userName"];
                 o.Password = apiConnectionOptions["password"];
             });
 
