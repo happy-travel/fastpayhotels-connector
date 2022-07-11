@@ -19,6 +19,11 @@ public class AvailabilitySearchResultStorage
       => await GetCachedData(BuildKey(availabilityId), a => a.AccommodationId == accommodationId);
 
 
+    public async Task<Result<CachedAccommodationAvailability>> GetByRoomContractSetId(string availabilityId, Guid roomContractSetId)
+        => await GetCachedData(BuildKey(availabilityId), a => a.CachedRoomContractSets
+            .Any(r => r.Id == roomContractSetId));
+
+
     public Task Set(string availabilityId, List<CachedAccommodationAvailability> data)
         => _flow.SetAsync(BuildKey(availabilityId), data, RequestCacheLifeTime);
 

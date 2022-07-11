@@ -54,7 +54,8 @@ public static class ServicesConfigurationExtensions
         builder.Services.AddTransient<TimezoneService>();
 
         builder.Services.AddTransient<AvailabilityRequestStorage>()
-            .AddTransient<AvailabilitySearchResultStorage>();
+            .AddTransient<AvailabilitySearchResultStorage>()
+            .AddTransient<PreBookResultStorage>();
 
         builder.Services.AddHealthChecks()
             .AddDbContextCheck<FastpayhotelsContext>();

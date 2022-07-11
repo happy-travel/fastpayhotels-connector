@@ -25,15 +25,15 @@ public class AvailabilitySearchMapper
     {
         var numberOfNights = availabilityRequest.GetNumberOfNights();
 
+        var availabilityId = Guid.NewGuid().ToString();
+
         if (!response.HotelAvails.Any())
-            return new Availability(availabilityId: string.Empty,
+            return new Availability(availabilityId: availabilityId,
                 numberOfNights: numberOfNights,
                 checkInDate: availabilityRequest.CheckInDate,
                 checkOutDate: availabilityRequest.CheckOutDate,
                 expiredAfter: DateTimeOffset.MinValue,
                 new List<SlimAccommodationAvailability>(0));
-
-        var availabilityId = Guid.NewGuid().ToString();
 
         var slimAccommodationAvailabilities = new List<SlimAccommodationAvailability>();
         var cachedAccommodationAvailabilities = new List<CachedAccommodationAvailability>();
@@ -64,7 +64,7 @@ public class AvailabilitySearchMapper
     private List<CachedRoomContractSet> MapRooms(ApiHotelAvail hotelAvail, AvailabilityRequest availabilityRequest, int numberOfNights,  TimeSpan hotelTimezone)
         => availabilityRequest.Rooms.Count == 1
             ? GetForSingleRoom(hotelAvail, availabilityRequest, numberOfNights, hotelTimezone)
-            : GetForMultipleRooms(hotelAvail, availabilityRequest, numberOfNights, hotelTimezone);
+            : GetForMultipleRooms(hotelAvail, availabilityRequest, numberOfNights, hotelTimezone);    
 
 
     private List<CachedRoomContractSet> GetForSingleRoom(ApiHotelAvail hotelAvail, AvailabilityRequest availabilityRequest, int numberOfNights, TimeSpan hotelTimezone)

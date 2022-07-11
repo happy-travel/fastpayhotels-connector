@@ -82,16 +82,19 @@ public static class ServiceCollectionExtensions
 
         ConfigureApiConnectionOptions();
         ConfigureAvailabilityHttpClient();
+        ConfigureBookingHttpClient();
 
         return services.AddTransient<FastpayhotelsShoppingClient>()
+            .AddTransient<TokenProvider>()
             .AddTransient<AvailabilityTokenAuthHeaderHandler>()
-            .AddTransient<TokenProvider>();
+            .AddTransient<BookingTokenAuthHeaderHandler>();
 
 
         void ConfigureApiConnectionOptions()
             => services.Configure<ApiConnection>(o =>
             {
                 o.AvailabilityEndPoint = apiConnectionOptions["availabilityEndPoint"];
+                o.BookingEndPoint = apiConnectionOptions["bookingEndPoint"];
                 o.ClientId = apiConnectionOptions["clientId"];
                 o.ClientSecret = apiConnectionOptions["clientSecret"];
                 o.UserName = apiConnectionOptions["userName"];
@@ -106,6 +109,22 @@ public static class ServiceCollectionExtensions
                 client.BaseAddress = new Uri(apiConnectionOptions["availabilityEndPoint"]);
             })
             .AddHttpMessageHandler<AvailabilityTokenAuthHeaderHandler>()
+            .AddHttpClientRequestLogging(configuration: configuration)
+            .UseHttpClientMetrics()
+            .AddHttpRequestAudit(options =>
+            {
+                options.Endpoint = fukuokaOptions["endpoint"];
+            });
+        }
+
+
+        void ConfigureBookingHttpClient()
+        {
+            services.AddHttpClient(HttpClientNames.FastpayhotelsBookingClient, client =>
+            {
+                client.BaseAddress = new Uri(apiConnectionOptions["bookingEndPoint"]);
+            })
+            .AddHttpMessageHandler<BookingTokenAuthHeaderHandler>()
             .AddHttpClientRequestLogging(configuration: configuration)
             .UseHttpClientMetrics()
             .AddHttpRequestAudit(options =>

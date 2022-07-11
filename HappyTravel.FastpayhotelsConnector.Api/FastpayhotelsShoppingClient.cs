@@ -25,6 +25,23 @@ public class FastpayhotelsShoppingClient
     }
 
 
+    public async Task<Result<ApiPreBookResponse>> PreBook(ApiPreBookRequest preBookRequest, CancellationToken cancellationToken)
+    {
+        const string endpointUrl = "api/booking/prebook";
+
+        var (_, isFailure, preBookResult, error) = await Post<ApiPreBookRequest, ApiPreBookResponse>(HttpClientNames.FastpayhotelsBookingClient, 
+            new Uri(endpointUrl, UriKind.Relative), preBookRequest, cancellationToken);
+
+        if (isFailure)
+            return Result.Failure<ApiPreBookResponse>(error);
+
+        if (!preBookResult.Result.Success)
+            return Result.Failure<ApiPreBookResponse>(preBookResult.Result.Message);
+
+        return preBookResult;
+    }
+
+
     private Task<Result<TResponse>> Post<TRequest, TResponse>(string httpClientName, Uri url, TRequest requestContent, CancellationToken cancellationToken)
         => Send<TResponse>(httpClientName, 
         new HttpRequestMessage(HttpMethod.Post, url)
