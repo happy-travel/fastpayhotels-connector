@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace HappyTravel.FastpayhotelsConnector.Api.Models.Availability.Api;
+namespace HappyTravel.FastpayhotelsConnector.Api.Models;
 
 public class ApiHotelInfo
 {
