@@ -1,7 +1,7 @@
 ﻿using HappyTravel.EdoContracts.Accommodations;
 using HappyTravel.EdoContracts.Accommodations.Internals;
 using HappyTravel.FastpayhotelsConnector.Api.Infrastructure.Extensions;
-using HappyTravel.FastpayhotelsConnector.Api.Models.Availability.Api;
+using HappyTravel.FastpayhotelsConnector.Api.Models;
 
 namespace HappyTravel.FastpayhotelsConnector.Api.Services.Availabilities;
 
