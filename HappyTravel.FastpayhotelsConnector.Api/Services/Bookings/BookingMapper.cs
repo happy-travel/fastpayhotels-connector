@@ -1,18 +1,18 @@
-﻿using HappyTravel.EdoContracts.Accommodations.Enums;
+﻿using HappyTravel.EdoContracts.Accommodations;
+using HappyTravel.EdoContracts.Accommodations.Enums;
 using HappyTravel.EdoContracts.Accommodations.Internals;
-using HappyTravel.EdoContracts.General;
 using HappyTravel.FastpayhotelsConnector.Api.Models.Booking;
 
 namespace HappyTravel.FastpayhotelsConnector.Api.Services.Bookings;
 
 public static class BookingMapper
 {
-    public static EdoContracts.Accommodations.Booking Map(ApiBookingResponse bookingResponse, List<SlimRoomOccupation> bookingRooms,
+    public static Booking Map(ApiBookingResponse bookingResponse, List<SlimRoomOccupation> bookingRooms,
         DateTimeOffset checkInDate, DateTimeOffset checkOutDate)
     {
         var booking = bookingResponse.Result.BookingInfo;
 
-        return new EdoContracts.Accommodations.Booking(referenceCode: booking.AgencyCode,
+        return new Booking(referenceCode: booking.AgencyCode,
             status: BookingStatusCodes.Confirmed,
             accommodationId: booking.HotelInfo.Code,
             supplierReferenceCode: booking.BookingCode,
@@ -20,17 +20,43 @@ public static class BookingMapper
             checkOutDate: checkOutDate,
             rooms: bookingRooms,
             bookingUpdateMode: BookingUpdateModes.Synchronous,
-            specialValues: GetSpecialValues());
+            specialValues: GetSpecialValues(booking.SpecialNotes));
+    }
 
 
-        List<KeyValuePair<string, string>> GetSpecialValues()
-        {
-            var specialValues = new List<KeyValuePair<string, string>>();
+    public static Booking Map(ApiBookingDetailsResponse response, List<SlimRoomOccupation> bookingRooms,
+        DateTimeOffset checkInDate, DateTimeOffset checkOutDate)
+    {
+        var booking = response.Booking;
 
-            if (!string.IsNullOrWhiteSpace(booking.SpecialNotes))
-                specialValues.Add(new("Booking information", booking.SpecialNotes));
+        return new Booking(referenceCode: booking.CustomerCode,
+            status: GetBookingStatus(),
+            accommodationId:booking.HotelCode,
+            supplierReferenceCode:booking.BookingCode,
+            checkInDate:,
+            checkOutDate:,
+            rooms:bookingRooms,
+            bookingUpdateMode: BookingUpdateModes.Synchronous,
+            specialValues: GetSpecialValues(booking.SpecialNotes));
 
-            return specialValues;
-        }
+
+        BookingStatusCodes GetBookingStatus()
+            => booking.BookingStatus switch
+            {
+                "CONFIRMED" => BookingStatusCodes.Confirmed,
+                "CANCELLED" => BookingStatusCodes.Cancelled,
+                _ => BookingStatusCodes.NotFound
+            };
+    }
+
+
+    private static List<KeyValuePair<string, string>> GetSpecialValues(string specialNotes)
+    {
+        var specialValues = new List<KeyValuePair<string, string>>();
+
+        if (!string.IsNullOrWhiteSpace(specialNotes))
+            specialValues.Add(new("Booking information", specialNotes));
+
+        return specialValues;
     }
 }

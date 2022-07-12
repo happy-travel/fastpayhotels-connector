@@ -8,6 +8,7 @@ using HappyTravel.FastpayhotelsConnector.Api.Models.Availability;
 using HappyTravel.FastpayhotelsConnector.Api.Models.Booking;
 using HappyTravel.FastpayhotelsConnector.Api.Services.Caching;
 using Microsoft.AspNetCore.Mvc;
+using Booking = HappyTravel.EdoContracts.Accommodations.Booking;
 
 namespace HappyTravel.FastpayhotelsConnector.Api.Services.Bookings;
 
@@ -89,6 +90,34 @@ public class BookingService : IBookingService
     public Task<Result<Booking>> Get(string referenceCode, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
+
+
+        _bookingManager.Get(referenceCode);
+
+
+        async Task<Result<(Data.Models.Booking, ApiBookingDetailsResponse)>> GetBookingDetails(Data.Models.Booking booking)
+        {
+            var bookingDetailsRequest = new ApiBookingDetailsRequest()
+            {
+                BookingCode = booking.BookingCode,
+                CustomerCode = booking.ReferenceCode
+            };
+
+            var (isSuccess, _, bookingDetails, error) = await _client.GetBookingDetails(bookingDetailsRequest, cancellationToken);
+
+            if (isSuccess)
+                return (booking, bookingDetails);
+
+            return Result.Failure<(Data.Models.Booking, ApiBookingDetailsResponse)>(error);
+        }
+
+
+        Booking MapToContract((Data.Models.Booking, ApiBookingDetailsResponse) result)
+        {
+            var (booking, bookingDetails) = result;
+
+            return BookingMapper.Map(reservation, referenceCode, booking.CheckInDate, booking.CheckOutDate);
+        }
     }
 
 

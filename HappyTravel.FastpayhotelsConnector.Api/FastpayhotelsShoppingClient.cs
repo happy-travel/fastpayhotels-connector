@@ -43,6 +43,14 @@ public class FastpayhotelsShoppingClient
     }
 
 
+    public async Task<Result<ApiBookingDetailsResponse>> GetBookingDetails(ApiBookingDetailsRequest request, CancellationToken cancellationToken)
+    {
+        const string endpointUrl = "api/booking/details";
+
+        return await Post<ApiBookingDetailsRequest, ApiBookingDetailsResponse>(HttpClientNames.FastpayhotelsBookingClient, new Uri(endpointUrl, UriKind.Relative), request, cancellationToken);
+    }
+
+
     public async Task<Result<ApiPreBookResponse>> PreBook(ApiPreBookRequest preBookRequest, CancellationToken cancellationToken)
     {
         const string endpointUrl = "api/booking/prebook";
