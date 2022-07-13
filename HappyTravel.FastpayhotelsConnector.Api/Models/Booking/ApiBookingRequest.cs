@@ -2,7 +2,7 @@
 
 namespace HappyTravel.FastpayhotelsConnector.Api.Models.Booking;
 
-public class ApiBookingRequest
+public class ApiBookingRequest : ApiMessage
 {
     [JsonPropertyName("agencyCode")]
     public string AgencyCode { get; set; }
