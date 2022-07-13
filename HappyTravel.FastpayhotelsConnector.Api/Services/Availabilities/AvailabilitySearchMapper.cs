@@ -119,9 +119,14 @@ public class AvailabilitySearchMapper
             {
                 var equalRoomOccupationsCount = roomOccupations.Count();
 
-                var roomRateGroup = hotelAvail.AvailRoomRates
-                    .Where(r => ApiOccupancyToString(r.Occupancy) == roomOccupations.Key)
-                    .ToList();
+                var roomRateGroup = new List<ApiAvailRoomRate>();
+                // If all the requested rooms have the same guests, null will be returned in the Occupancy property.
+                if (roomOccupationGroups.Count == 1 && hotelAvail.AvailRoomRates.All(r => r.Occupancy is null)) 
+                    roomRateGroup = hotelAvail.AvailRoomRates;
+                else  
+                    roomRateGroup = hotelAvail.AvailRoomRates
+                        .Where(r => ApiOccupancyToString(r.Occupancy) == roomOccupations.Key)
+                        .ToList();
                 if (!roomRateGroup.Any())
                     return default;
                 
@@ -201,9 +206,12 @@ public class AvailabilitySearchMapper
                 {
                     foreach (var roomRate in roomGroup.Value)
                     {
+                        var adultsNumber = roomRate.Occupancy?.Adults ?? availabilityRequest.Rooms.First().AdultsNumber;
+                        var childrenAges = roomRate.Occupancy?.ChildrenAges ?? availabilityRequest.Rooms.First().ChildrenAges;
+
                         roomCombinations.Add(new()
                         {
-                            CreateRoomContract(roomRate, availabilityRequest.CheckInDate, roomRate.Occupancy.Adults, roomRate.Occupancy.ChildrenAges, numberOfNights, hotelTimezone)
+                            CreateRoomContract(roomRate, availabilityRequest.CheckInDate, adultsNumber, childrenAges, numberOfNights, hotelTimezone)
                         });
                     }
                 }
@@ -215,10 +223,13 @@ public class AvailabilitySearchMapper
                     {
                         foreach (var roomRate in roomGroup.Value)
                         {
+                            var adultsNumber = roomRate.Occupancy?.Adults ?? availabilityRequest.Rooms.First().AdultsNumber;
+                            var childrenAges = roomRate.Occupancy?.ChildrenAges ?? availabilityRequest.Rooms.First().ChildrenAges;
+
                             var roomCombinationBuffer = new List<CachedRoomContract>();
 
                             roomCombinationBuffer.AddRange(roomCombination);
-                            roomCombinationBuffer.Add(CreateRoomContract(roomRate, availabilityRequest.CheckInDate, roomRate.Occupancy.Adults, roomRate.Occupancy.ChildrenAges, numberOfNights, hotelTimezone));
+                            roomCombinationBuffer.Add(CreateRoomContract(roomRate, availabilityRequest.CheckInDate, adultsNumber, childrenAges, numberOfNights, hotelTimezone));
 
                             roomCombinationsBuffer.Add(roomCombinationBuffer);
                         }
@@ -256,7 +267,10 @@ public class AvailabilitySearchMapper
                 var roomContracts = new List<CachedRoomContract>();
                 var roomRate = largestGroup.Value[i];
 
-                roomContracts.Add(CreateRoomContract(largestGroup.Value[i], availabilityRequest.CheckInDate, roomRate.Occupancy.Adults, roomRate.Occupancy.ChildrenAges, numberOfNights, hotelTimezone));
+                var adultsNumber = roomRate.Occupancy?.Adults ?? availabilityRequest.Rooms.First().AdultsNumber;
+                var childrenAges = roomRate.Occupancy?.ChildrenAges ?? availabilityRequest.Rooms.First().ChildrenAges;
+
+                roomContracts.Add(CreateRoomContract(largestGroup.Value[i], availabilityRequest.CheckInDate, adultsNumber, childrenAges, numberOfNights, hotelTimezone));
 
                 foreach (var otherGroup in otherGroups)
                 {
@@ -266,7 +280,10 @@ public class AvailabilitySearchMapper
 
                     var apiRoomRate = otherGroup.Value[index];
 
-                    roomContracts.Add(CreateRoomContract(apiRoomRate, availabilityRequest.CheckInDate, apiRoomRate.Occupancy.Adults, apiRoomRate.Occupancy.ChildrenAges, numberOfNights, hotelTimezone));
+                    var apiAdultsNumber = apiRoomRate.Occupancy?.Adults ?? availabilityRequest.Rooms.First().AdultsNumber;
+                    var apiChildrenAges = apiRoomRate.Occupancy?.ChildrenAges ?? availabilityRequest.Rooms.First().ChildrenAges;
+
+                    roomContracts.Add(CreateRoomContract(apiRoomRate, availabilityRequest.CheckInDate, apiAdultsNumber, apiChildrenAges, numberOfNights, hotelTimezone));
                 }
 
                 var id = Guid.NewGuid();
