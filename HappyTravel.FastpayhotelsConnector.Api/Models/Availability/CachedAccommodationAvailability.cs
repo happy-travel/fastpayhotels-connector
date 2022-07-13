@@ -1,3 +1,3 @@
 ﻿namespace HappyTravel.FastpayhotelsConnector.Api.Models.Availability;
 
-public record CachedAccommodationAvailability(string AccommodationId, List<CachedRoomContractSet> CachedRoomContractSets);
+public record CachedAccommodationAvailability(string AccommodationId, string MessageId, List<CachedRoomContractSet> CachedRoomContractSets);
