@@ -7,7 +7,8 @@ public static class AvailabilityRequestExtensions
 {
     public static ApiAvailabilityRequest ToApiAvailbilityRequest(this AvailabilityRequest request)
         => new()
-        {            
+        {
+            MessageId = Guid.NewGuid().ToString(),
             CheckIn = request.CheckInDate.ToString("yyyy-MM-dd"),
             CheckOut = request.CheckOutDate.ToString("yyyy-MM-dd"),
             Occupancies = request.Rooms
