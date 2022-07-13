@@ -43,8 +43,10 @@ public class AvailabilitySearchMapper
             //var hotelTimezone = await _timezoneService.GetTimezone(hotelAvail.HotelInfo.Code);
             var hotelTimezone = TimeSpan.FromHours(5); // For testing
 
-            var cachedAccommodationAvailability = new CachedAccommodationAvailability(hotelAvail.HotelInfo.Code,
-                MapRooms(hotelAvail, availabilityRequest, numberOfNights, hotelTimezone));
+            var cachedAccommodationAvailability = new CachedAccommodationAvailability(
+                AccommodationId: hotelAvail.HotelInfo.Code,
+                MessageId: response.MessageId.ToString(),
+                CachedRoomContractSets: MapRooms(hotelAvail, availabilityRequest, numberOfNights, hotelTimezone));
 
             slimAccommodationAvailabilities.Add(cachedAccommodationAvailability.ToContract(availabilityId));
             cachedAccommodationAvailabilities.Add(cachedAccommodationAvailability);
