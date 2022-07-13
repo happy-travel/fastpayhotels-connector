@@ -2,7 +2,7 @@
 
 namespace HappyTravel.FastpayhotelsConnector.Api.Models.Availability.Api;
 
-public class ApiAvailabilityRequest
+public class ApiAvailabilityRequest : ApiMessage
 {
     [JsonPropertyName("currency")]
     public string Currency { get; set; }
