@@ -55,13 +55,11 @@ public class RoomContractSetAvailabilityService : IRoomContractSetAvailabilitySe
             var cachedRoomContractSet = accommodationAvailability.CachedRoomContractSets.Single(r => r.Id == roomContractSetId);
 
             var rooms = cachedRoomContractSet.Rooms
-                .Select(r => r.ReservationToken)
-                .GroupBy(r => r)
-                .Select(g => new ApiPreBookRqRoom()
-                    {
-                        AvailToken = g.Key,
-                        Quantity = g.Count()
-                    })
+                .Select(r => new ApiPreBookRqRoom()
+                {
+                    AvailToken = r.ReservationToken,
+                    Quantity = 1
+                })
                 .ToList();
 
             var preBookRequest = new ApiPreBookRequest()
