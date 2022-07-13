@@ -1,3 +1,3 @@
 ﻿namespace HappyTravel.FastpayhotelsConnector.Api.Models.Availability;
 
-public record CachedPrebookResult(List<string> ReservationTokens);
+public record CachedPrebookResult(string MessageId, List<string> ReservationTokens);

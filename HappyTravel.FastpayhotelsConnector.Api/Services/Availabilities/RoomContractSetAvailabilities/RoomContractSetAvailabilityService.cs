@@ -66,6 +66,7 @@ public class RoomContractSetAvailabilityService : IRoomContractSetAvailabilitySe
 
             var preBookRequest = new ApiPreBookRequest()
             {
+                MessageId = accommodationAvailability.MessageId,
                 Rooms = rooms
             };
 
@@ -73,7 +74,7 @@ public class RoomContractSetAvailabilityService : IRoomContractSetAvailabilitySe
 
             if (isSuccess)
             {
-                await _preBookResultStorage.Set(availabilityId, new CachedPrebookResult(preBookResponse.Result.ReservationTokens));
+                await _preBookResultStorage.Set(availabilityId, new CachedPrebookResult(preBookResponse.MessageId, preBookResponse.Result.ReservationTokens));
 
                 return (request, accommodationAvailability.AccommodationId, cachedRoomContractSet);
             }                
