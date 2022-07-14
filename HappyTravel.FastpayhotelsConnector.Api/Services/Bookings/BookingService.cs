@@ -89,12 +89,11 @@ public class BookingService : IBookingService
         throw new NotImplementedException();
     }
 
-    public Task<Result<Booking>> Get(string referenceCode, CancellationToken cancellationToken)
+    public async Task<Result<Booking>> Get(string referenceCode, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-
-
-        _bookingManager.Get(referenceCode);
+        return await _bookingManager.Get(referenceCode)
+            .Bind(GetBookingDetails)
+            .Map(ToContract);
 
 
         async Task<Result<(Data.Models.Booking, ApiBookingDetailsResponse)>> GetBookingDetails(Data.Models.Booking booking)
@@ -114,11 +113,11 @@ public class BookingService : IBookingService
         }
 
 
-        Booking MapToContract((Data.Models.Booking, ApiBookingDetailsResponse) result)
+        Booking ToContract((Data.Models.Booking, ApiBookingDetailsResponse) result)
         {
             var (booking, bookingDetails) = result;
 
-            return BookingMapper.Map(reservation, referenceCode, booking.CheckInDate, booking.CheckOutDate);
+            return BookingMapper.Map(bookingDetails, booking);
         }
     }
 

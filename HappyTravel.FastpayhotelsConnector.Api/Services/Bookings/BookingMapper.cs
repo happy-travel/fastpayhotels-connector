@@ -24,24 +24,23 @@ public static class BookingMapper
     }
 
 
-    public static Booking Map(ApiBookingDetailsResponse response, List<SlimRoomOccupation> bookingRooms,
-        DateTimeOffset checkInDate, DateTimeOffset checkOutDate)
+    public static Booking Map(ApiBookingDetailsResponse response, Data.Models.Booking booking)
     {
-        var booking = response.Booking;
+        var bookingDetails = response.Booking;
 
-        return new Booking(referenceCode: booking.CustomerCode,
+        return new Booking(referenceCode: bookingDetails.CustomerCode,
             status: GetBookingStatus(),
-            accommodationId:booking.HotelCode,
-            supplierReferenceCode:booking.BookingCode,
-            checkInDate:,
-            checkOutDate:,
-            rooms:bookingRooms,
+            accommodationId: bookingDetails.HotelCode,
+            supplierReferenceCode: booking.BookingCode,
+            checkInDate: booking.CheckInDate,
+            checkOutDate: booking.CheckOutDate,
+            rooms: booking.Rooms,
             bookingUpdateMode: BookingUpdateModes.Synchronous,
-            specialValues: GetSpecialValues(booking.SpecialNotes));
+            specialValues: GetSpecialValues(bookingDetails.SpecialNotes));
 
 
         BookingStatusCodes GetBookingStatus()
-            => booking.BookingStatus switch
+            => bookingDetails.BookingStatus switch
             {
                 "CONFIRMED" => BookingStatusCodes.Confirmed,
                 "CANCELLED" => BookingStatusCodes.Cancelled,
@@ -55,7 +54,7 @@ public static class BookingMapper
         var specialValues = new List<KeyValuePair<string, string>>();
 
         if (!string.IsNullOrWhiteSpace(specialNotes))
-            specialValues.Add(new("Booking information", specialNotes));
+            specialValues.Add(new("Accommodation information", specialNotes));
 
         return specialValues;
     }
