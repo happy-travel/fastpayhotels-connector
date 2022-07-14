@@ -69,6 +69,8 @@ public class BookingService : IBookingService
             {
                 ReferenceCode = bookingRequest.ReferenceCode,
                 BookingCode = booking.Result.BookingInfo.BookingCode,
+                CheckInDate = availabilityRequest.CheckInDate,
+                CheckOutDate = availabilityRequest.CheckOutDate,
                 Rooms = bookingRequest.Rooms
             });
         }            
