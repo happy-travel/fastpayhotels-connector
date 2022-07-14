@@ -1,5 +1,7 @@
-﻿using FloxDc.CacheFlow;
+﻿using CSharpFunctionalExtensions;
+using FloxDc.CacheFlow;
 using FloxDc.CacheFlow.Extensions;
+using HappyTravel.FastpayhotelsConnector.Api.Infrastructure.Logging;
 using HappyTravel.FastpayhotelsConnector.Api.Models.Availability;
 
 namespace HappyTravel.FastpayhotelsConnector.Api.Services.Caching;
@@ -10,6 +12,18 @@ public class PreBookResultStorage
     {
         _flow = flow;
         _logger = logger;
+    }
+
+
+    public async Task<Result<CachedPrebookResult>> Get(string availabilityId)
+    {
+        var preBookResult = await _flow.GetAsync<CachedPrebookResult?>(BuildKey(availabilityId), RequestCacheLifeTime);
+
+        if (preBookResult is not null)
+            return preBookResult;
+
+        _logger.LogGetPreBookResultFromStorageFailed(availabilityId);
+        return Result.Failure<CachedPrebookResult>($"Could not get PreBookResult with id {availabilityId}");
     }
 
 

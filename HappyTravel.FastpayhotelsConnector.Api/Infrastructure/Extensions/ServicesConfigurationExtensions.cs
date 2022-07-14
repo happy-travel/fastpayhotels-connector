@@ -57,6 +57,8 @@ public static class ServicesConfigurationExtensions
             .AddTransient<AvailabilitySearchResultStorage>()
             .AddTransient<PreBookResultStorage>();
 
+        builder.Services.AddTransient<BookingManager>();
+
         builder.Services.AddHealthChecks()
             .AddDbContextCheck<FastpayhotelsContext>();
 

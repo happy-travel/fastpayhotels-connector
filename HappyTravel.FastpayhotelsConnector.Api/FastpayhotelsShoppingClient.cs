@@ -2,6 +2,7 @@
 using HappyTravel.FastpayhotelsConnector.Api.Infrastructure.Logging;
 using HappyTravel.FastpayhotelsConnector.Api.Models;
 using HappyTravel.FastpayhotelsConnector.Api.Models.Availability.Api;
+using HappyTravel.FastpayhotelsConnector.Api.Models.Booking;
 using System.Text;
 using System.Text.Json;
 
@@ -14,6 +15,23 @@ public class FastpayhotelsShoppingClient
     {
         _httpClientFactory = httpClientFactory;
         _logger = logger;
+    }
+
+
+    public async Task<Result<ApiBookingResponse>> Book(ApiBookingRequest bookingRequest, CancellationToken cancellationToken)
+    {
+        const string endpointUrl = "api/booking/book";
+
+        var (_, isFailure, booking, error) = await Post<ApiBookingRequest, ApiBookingResponse>(HttpClientNames.FastpayhotelsBookingClient,
+            new Uri(endpointUrl, UriKind.Relative), bookingRequest, cancellationToken);
+
+        if (isFailure)
+            return Result.Failure<ApiBookingResponse>(error);
+
+        if (!booking.Result.Success)
+            return Result.Failure<ApiBookingResponse>(booking.Result.Message);
+
+        return booking;
     }
 
 

@@ -19,5 +19,12 @@
     "template": "Get accommodation by availabilityId `{AvailabilityId}` from storage failed",
     "level": "Warning",
     "argumentTypes": [ "string" ]
+  },
+  {
+    "id": 30012,
+    "name": "GetPreBookResultFromStorageFailed",
+    "template": "Get PreBookResult by availabilityId `{AvailabilityId}` from storage failed",
+    "level": "Warning",
+    "argumentTypes": [ "string" ]
   }
 ]

@@ -14,6 +14,9 @@ public static partial class LoggerExtensions
     [LoggerMessage(30011, LogLevel.Warning, "Get accommodation by availabilityId `{AvailabilityId}` from storage failed")]
     static partial void GetAccommodationFromStorageFailed(ILogger logger, string AvailabilityId);
     
+    [LoggerMessage(30012, LogLevel.Warning, "Get PreBookResult by availabilityId `{AvailabilityId}` from storage failed")]
+    static partial void GetPreBookResultFromStorageFailed(ILogger logger, string AvailabilityId);
+    
     
     
     public static void LogApiResponseDeserializationException(this ILogger logger, string message)
@@ -24,4 +27,7 @@ public static partial class LoggerExtensions
     
     public static void LogGetAccommodationFromStorageFailed(this ILogger logger, string AvailabilityId)
         => GetAccommodationFromStorageFailed(logger, AvailabilityId);
+    
+    public static void LogGetPreBookResultFromStorageFailed(this ILogger logger, string AvailabilityId)
+        => GetPreBookResultFromStorageFailed(logger, AvailabilityId);
 }

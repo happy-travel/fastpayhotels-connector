@@ -14,14 +14,12 @@ public class RoomContractSetAvailabilityService : IRoomContractSetAvailabilitySe
     public RoomContractSetAvailabilityService(FastpayhotelsShoppingClient client,
         AvailabilityRequestStorage requestStorage,
         AvailabilitySearchResultStorage availabilitySearchResultStorage,
-        PreBookResultStorage preBookResultStorage,
-        AvailabilitySearchMapper availabilitySearchMapper)
+        PreBookResultStorage preBookResultStorage)
     {
         _client = client;
         _requestStorage = requestStorage;
         _availabilitySearchResultStorage = availabilitySearchResultStorage;
         _preBookResultStorage = preBookResultStorage;
-        _availabilitySearchMapper = availabilitySearchMapper;
     }
 
 
@@ -109,5 +107,4 @@ public class RoomContractSetAvailabilityService : IRoomContractSetAvailabilitySe
     private readonly AvailabilityRequestStorage _requestStorage;
     private readonly AvailabilitySearchResultStorage _availabilitySearchResultStorage;
     private readonly PreBookResultStorage _preBookResultStorage;
-    private readonly AvailabilitySearchMapper _availabilitySearchMapper;
 }

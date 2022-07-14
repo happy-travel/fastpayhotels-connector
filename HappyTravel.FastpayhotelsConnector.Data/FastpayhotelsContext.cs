@@ -13,13 +13,20 @@ public class FastpayhotelsContext : DbContext
 
 
     public DbSet<Accommodation> Accommodations { get; set; }
+    public DbSet<Booking> Bookings { get; set; }
 
 
-    protected override void OnModelCreating(ModelBuilder builder)
-    {        
-        builder.Entity<Accommodation>(c =>
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Accommodation>(builder =>
         {
-            c.HasKey(c => c.Code);
+            builder.HasKey(b => b.Code);
+        });
+
+        modelBuilder.Entity<Booking>(builder =>
+        {
+            builder.HasKey(b => b.ReferenceCode);
+            builder.Property(b => b.Rooms).HasColumnType("jsonb");
         });
     }
 }
