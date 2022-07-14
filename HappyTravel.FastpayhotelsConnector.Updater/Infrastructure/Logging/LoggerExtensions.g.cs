@@ -20,20 +20,17 @@ public static partial class LoggerExtensions
     [LoggerMessage(40005, LogLevel.Information, "Stopping operation '{operationName}'")]
     static partial void StoppingOperation(ILogger logger, string operationName);
     
-    [LoggerMessage(40006, LogLevel.Information, "Starting raw data hotels update with id '{updateId}'")]
-    static partial void StartingHotelsUpdate(ILogger logger, int updateId);
+    [LoggerMessage(40006, LogLevel.Information, "Starting raw data hotels update")]
+    static partial void StartingHotelsUpdate(ILogger logger);
     
-    [LoggerMessage(40007, LogLevel.Information, "Deactivate all hotels")]
-    static partial void DeactivateAllHotels(ILogger logger);
-    
-    [LoggerMessage(40008, LogLevel.Error, "Hotelts loader: ")]
+    [LoggerMessage(40007, LogLevel.Error, "Hotelts loader: ")]
     static partial void HotelsLoaderException(ILogger logger, System.Exception exception);
     
-    [LoggerMessage(40009, LogLevel.Information, "Finish raw data update with id '{updateId}'")]
-    static partial void FinishHotelsUpdate(ILogger logger, int updateId);
+    [LoggerMessage(40008, LogLevel.Information, "Finish raw data update")]
+    static partial void FinishHotelsUpdate(ILogger logger);
     
-    [LoggerMessage(40010, LogLevel.Error, "Hotel load exception with id {hotelId}: ")]
-    static partial void HotelLoadException(ILogger logger, System.Exception exception, int hotelId);
+    [LoggerMessage(40009, LogLevel.Error, "Hotel load exception")]
+    static partial void HotelLoadException(ILogger logger, System.Exception exception);
     
     
     
@@ -52,18 +49,15 @@ public static partial class LoggerExtensions
     public static void LogStoppingOperation(this ILogger logger, string operationName)
         => StoppingOperation(logger, operationName);
     
-    public static void LogStartingHotelsUpdate(this ILogger logger, int updateId)
-        => StartingHotelsUpdate(logger, updateId);
-    
-    public static void LogDeactivateAllHotels(this ILogger logger)
-        => DeactivateAllHotels(logger);
+    public static void LogStartingHotelsUpdate(this ILogger logger)
+        => StartingHotelsUpdate(logger);
     
     public static void LogHotelsLoaderException(this ILogger logger, System.Exception exception)
         => HotelsLoaderException(logger, exception);
     
-    public static void LogFinishHotelsUpdate(this ILogger logger, int updateId)
-        => FinishHotelsUpdate(logger, updateId);
+    public static void LogFinishHotelsUpdate(this ILogger logger)
+        => FinishHotelsUpdate(logger);
     
-    public static void LogHotelLoadException(this ILogger logger, System.Exception exception, int hotelId)
-        => HotelLoadException(logger, exception, hotelId);
+    public static void LogHotelLoadException(this ILogger logger, System.Exception exception)
+        => HotelLoadException(logger, exception);
 }

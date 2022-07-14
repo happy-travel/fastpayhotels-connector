@@ -44,8 +44,7 @@ public class Startup
         services.AddTransient<TokenAuthHeaderHandler>();
         services.AddTransient<TokenProvider>();
         services.AddTransient<HotelLoader>();
-        services.AddTransient<HotelUpdater>();
-        services.AddTransient<UpdateHistoryService>();
+        services.AddTransient<HotelUpdater>();        
 
         services.AddHostedService<StaticDataUpdateHostedService>();
         services.AddTransient<DateTimeProvider>();

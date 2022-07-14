@@ -9,34 +9,26 @@ namespace HappyTravel.FastpayhotelsConnector.Updater.Workers;
 
 public class HotelLoader : IUpdateWorker
 {
-    public HotelLoader(FastpayhotelsContentClient client, ILogger<HotelLoader> logger, UpdateHistoryService updateHistoryService, HotelUpdater hotelsUpdater, IOptions<RawDataUpdateOptions> options)
+    public HotelLoader(FastpayhotelsContentClient client, ILogger<HotelLoader> logger, HotelUpdater hotelsUpdater, IOptions<RawDataUpdateOptions> options)
     {
         _client = client;
-        _logger = logger;
-        _updateHistoryService = updateHistoryService;
+        _logger = logger;        
         _hotelsUpdater = hotelsUpdater;
         _options = options.Value;
     }
 
 
     public async Task Run(CancellationToken cancellationToken)
-    {
-        var updateId = await _updateHistoryService.Create(_options);        
-        _logger.LogStartingHotelsUpdate(updateId);
+    {        
+        _logger.LogStartingHotelsUpdate();
 
         try
         {
             var lastSuccesUpdateDate = DateTimeOffset.MinValue;
-            if (_options.UpdateMode == UpdateMode.Full)
+            if (_options.UpdateMode == UpdateMode.Incremental)
             {
-                _logger.LogDeactivateAllHotels();
-                await _hotelsUpdater.DeactivateAllHotels(cancellationToken);
-            }
-            else
-            {
-                var lastSuccesUpdate = await _updateHistoryService.GetLastSuccessfulUpdateTime();
-                lastSuccesUpdateDate = lastSuccesUpdate.Value;
-            }
+                lastSuccesUpdateDate = await _hotelsUpdater.GetLastUpdateHotelDate(cancellationToken);
+            }            
 
             var hotelList = await _client.GetHotelList(new HotelListRequest(lastSuccesUpdateDate), cancellationToken);
 
@@ -44,23 +36,19 @@ public class HotelLoader : IUpdateWorker
             {
                 var hotelDetails = await _client.GetHotelDetails(new HotelDetailsRequest(hotelSummary.Code), cancellationToken);
                 await _hotelsUpdater.AddUpdateHotel(hotelSummary.Code, hotelDetails.HotelDetail, cancellationToken);
-            }
-
-            await _updateHistoryService.SetSuccess(updateId);
+            }            
         }
         catch (Exception ex)
         {
-            _logger.LogHotelsLoaderException(ex);
-            await _updateHistoryService.SetError(updateId, ex);
+            _logger.LogHotelsLoaderException(ex);            
         }
 
-        _logger.LogFinishHotelsUpdate(updateId);
+        _logger.LogFinishHotelsUpdate();
     }    
 
 
     private readonly FastpayhotelsContentClient _client;
-    private readonly ILogger<HotelLoader> _logger;
-    private readonly UpdateHistoryService _updateHistoryService;
+    private readonly ILogger<HotelLoader> _logger;    
     private readonly HotelUpdater _hotelsUpdater;
     private readonly RawDataUpdateOptions _options;
 }
