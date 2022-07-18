@@ -62,7 +62,22 @@
     "name": "HotelLoadException",
     "level": "Error",
     "template": "Hotel load exception",
-    "argumentTypes": [ ],
+    "argumentTypes": [],
     "hasException": true
+  },
+  {
+    "id": 40010,
+    "name": "HotelDetailException",
+    "level": "Error",
+    "template": "Hotel detail exception",
+    "argumentTypes": [],
+    "hasException": true
+  },
+  {
+    "id": 40011,
+    "name": "DeactivateHotels",
+    "level": "Information",
+    "template": "Deactivating hotels complete",
+    "argumentTypes": [ ]
   }
 ]

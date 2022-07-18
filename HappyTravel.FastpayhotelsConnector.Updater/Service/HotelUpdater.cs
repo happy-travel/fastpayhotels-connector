@@ -52,6 +52,12 @@ public class HotelUpdater
     }
 
 
+    public async Task<int> DeactivateNotFetched(DateTimeOffset modified, CancellationToken cancellationToken)
+       => await _context.Database.ExecuteSqlInterpolatedAsync(
+            @$"UPDATE ""Hotels"" SET ""IsActive"" = false WHERE ""IsActive"" = true AND ""Modified"" < {modified}",
+            cancellationToken);
+
+
     private readonly FastpayhotelsContext _context;
     private readonly FastpayhotelsSerializer _serializer;
     private readonly DateTimeProvider _dateTimeProvider;

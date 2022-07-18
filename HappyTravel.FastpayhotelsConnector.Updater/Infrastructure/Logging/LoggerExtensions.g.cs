@@ -32,6 +32,12 @@ public static partial class LoggerExtensions
     [LoggerMessage(40009, LogLevel.Error, "Hotel load exception")]
     static partial void HotelLoadException(ILogger logger, System.Exception exception);
     
+    [LoggerMessage(40010, LogLevel.Error, "Hotel detail exception")]
+    static partial void HotelDetailException(ILogger logger, System.Exception exception);
+    
+    [LoggerMessage(40011, LogLevel.Information, "Deactivating hotels complete")]
+    static partial void DeactivateHotels(ILogger logger);
+    
     
     
     public static void LogStartedWorker(this ILogger logger, string workerName)
@@ -60,4 +66,10 @@ public static partial class LoggerExtensions
     
     public static void LogHotelLoadException(this ILogger logger, System.Exception exception)
         => HotelLoadException(logger, exception);
+    
+    public static void LogHotelDetailException(this ILogger logger, System.Exception exception)
+        => HotelDetailException(logger, exception);
+    
+    public static void LogDeactivateHotels(this ILogger logger)
+        => DeactivateHotels(logger);
 }
