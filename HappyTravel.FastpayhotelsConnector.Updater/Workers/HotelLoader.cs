@@ -34,20 +34,21 @@ public class HotelLoader : IUpdateWorker
 
             var hotelList = await _client.GetHotelList(new HotelListRequest(lastSuccesUpdateDate), cancellationToken);
             bool hasError = false;
+            var updateBeginning = _dateTimeProvider.UtcNow();
 
             foreach (var hotelSummary in hotelList.HotelSummary)
             {
-                var (_, isSuccess, hotelDetails, error) = await _client.GetHotelDetails(new HotelDetailsRequest(hotelSummary.Code), cancellationToken);
+                var (isSuccess, _, hotelDetails, _) = await _client.GetHotelDetails(new HotelDetailsRequest(hotelSummary.Code), cancellationToken);
 
                 if (isSuccess)
                     await _hotelsUpdater.AddUpdateHotel(hotelSummary.Code, hotelDetails.HotelDetail, cancellationToken);
                 else
                     hasError = true;
-            }
+            } 
 
             if(!hasError && _options.UpdateMode == UpdateMode.Full)
             {
-                await _hotelsUpdater.DeactivateNotFetched(_dateTimeProvider.UtcNow(), cancellationToken);
+                await _hotelsUpdater.DeactivateNotFetched(updateBeginning, cancellationToken);
                 _logger.LogDeactivateHotels();
             }
 
