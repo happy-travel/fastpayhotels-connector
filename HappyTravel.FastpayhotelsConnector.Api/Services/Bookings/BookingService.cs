@@ -84,9 +84,27 @@ public class BookingService : IBookingService
         }
     }
 
-    public Task<Result> Cancel(string referenceCode, CancellationToken cancellationToken)
+    public async Task<Result> Cancel(string referenceCode, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return await _bookingManager.Get(referenceCode)
+            .Bind(CancelBooking);
+
+
+        async Task<Result> CancelBooking(Data.Models.Booking booking)
+        {
+            var request = new ApiCancellationBookingRequest()
+            {
+                BookingCode = booking.BookingCode,
+                CustomerCode = booking.ReferenceCode
+            };
+
+            var (isSuccess, _, response, error) = await _client.CancelBooking(request, cancellationToken);
+
+            if (isSuccess)
+                return Result.Success();
+
+            return Result.Failure(error);
+        }
     }
 
     public async Task<Result<Booking>> Get(string referenceCode, CancellationToken cancellationToken)

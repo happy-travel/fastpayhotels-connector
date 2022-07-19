@@ -35,6 +35,23 @@ public class FastpayhotelsShoppingClient
     }
 
 
+    public async Task<Result<ApiCancellationBookingResponse>> CancelBooking(ApiCancellationBookingRequest request, CancellationToken cancellationToken)
+    {
+        const string endpointUrl = "api/booking/cancel";
+
+        var (_, isFailure, cancelResponse, error) = await Post<ApiCancellationBookingRequest, ApiCancellationBookingResponse>(HttpClientNames.FastpayhotelsBookingClient,
+           new Uri(endpointUrl, UriKind.Relative), request, cancellationToken);
+
+        if (isFailure)
+            return Result.Failure<ApiCancellationBookingResponse>(error);
+
+        if (!cancelResponse.Success)
+            return Result.Failure<ApiCancellationBookingResponse>(cancelResponse.Message);
+
+        return cancelResponse;
+    }
+
+
     public async Task<Result<ApiAvailabilityResponse>> GetAvailability(ApiAvailabilityRequest request,  CancellationToken cancellationToken)
     {
         const string endpointUrl = "api/booking/availability";
