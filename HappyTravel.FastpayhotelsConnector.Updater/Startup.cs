@@ -4,7 +4,11 @@ using HappyTravel.FastpayhotelsConnector.Common.Infrastructure.TokenHandler;
 using HappyTravel.FastpayhotelsConnector.Common.Models;
 using HappyTravel.FastpayhotelsConnector.Data;
 using HappyTravel.FastpayhotelsConnector.Updater.Infrastructure;
+using HappyTravel.FastpayhotelsConnector.Updater.Service;
+using HappyTravel.FastpayhotelsConnector.Updater.Settings;
+using HappyTravel.FastpayhotelsConnector.Updater.Workers;
 using HappyTravel.VaultClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace HappyTravel.FastpayhotelsConnector.Updater;
 
@@ -38,8 +42,17 @@ public class Startup
         services.AddTransient<FastpayhotelsContentClient>();
         services.AddTransient<FastpayhotelsSerializer>();        
         services.AddTransient<CatalogueTokenAuthHeaderHandler>();
-        services.AddTransient<TokenProvider>();        
+        services.AddTransient<TokenProvider>();       
+        
+        services.AddTransient<HotelLoader>();
+        services.AddTransient<HotelUpdater>();
+        services.AddTransient<UpdateHistoryService>();
+        services.AddTransient<AccommodationUpdater>();
 
+        services.AddHostedService<StaticDataUpdateHostedService>();
+        services.AddTransient<DateTimeProvider>();
+
+        ConfigureDatabaseOptions(services, vaultClient);
         ConfigureWorkers(services);
 
         services.AddHealthChecks();
@@ -52,12 +65,54 @@ public class Startup
             o.Password = apiConnectionOptions["password"];
             o.CatalogueEndPoint = apiConnectionOptions["catalogueEndPoint"];
         });
+
+        services.Configure<RawDataUpdateOptions>(Configuration.GetSection("Workers:RawUpdateOptions"));
     }
 
 
     private void ConfigureWorkers(IServiceCollection services)
     {
-        
+        var workersToRun = Configuration.GetSection("Workers:WorkersToRun").Value;
+        workersToRun = "";
+        if (string.IsNullOrWhiteSpace(workersToRun))
+        {
+            services.AddTransient<IUpdateWorker, HotelLoader>();
+            services.AddTransient<IUpdateWorker, AccommodationUpdater>();
+        }
+        else
+        {
+            foreach (var workerName in workersToRun.Split(';').Select(s => s.Trim()))
+            {                
+                if (workerName == nameof(HotelLoader))
+                    services.AddTransient<IUpdateWorker, HotelLoader>();
+                if (workerName == nameof(HotelLoader))
+                    services.AddTransient<IUpdateWorker, AccommodationUpdater>();
+            }
+        }
+    }
+
+
+    private void ConfigureDatabaseOptions(IServiceCollection services, VaultClient.VaultClient vaultClient)
+    {
+        var databaseOptions = vaultClient.Get(Configuration["Database:Options"]).GetAwaiter().GetResult();
+
+        services.AddDbContext<FastpayhotelsContext>(options =>
+        {
+            var host = databaseOptions["host"];
+            var port = databaseOptions["port"];
+            var password = databaseOptions["password"];
+            var userId = databaseOptions["userId"];
+
+            var connectionString = Configuration["Database:ConnectionString"];
+            options.UseNpgsql(string.Format(connectionString, host, port, userId, password), builder =>
+            {
+                builder.UseNetTopologySuite();
+                builder.EnableRetryOnFailure();
+            });
+            options.UseInternalServiceProvider(null);
+            options.EnableSensitiveDataLogging(false);
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        }, ServiceLifetime.Singleton, ServiceLifetime.Singleton);
     }
 
 
