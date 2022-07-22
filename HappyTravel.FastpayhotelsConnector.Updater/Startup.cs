@@ -44,9 +44,8 @@ public class Startup
         services.AddTransient<CatalogueTokenAuthHeaderHandler>();
         services.AddTransient<TokenProvider>();       
         
-        services.AddTransient<HotelLoader>();
+        services.AddTransient<HotelLoader>();  
         services.AddTransient<HotelUpdater>();
-        services.AddTransient<UpdateHistoryService>();
         services.AddTransient<AccommodationUpdater>();
 
         services.AddHostedService<StaticDataUpdateHostedService>();
@@ -73,7 +72,6 @@ public class Startup
     private void ConfigureWorkers(IServiceCollection services)
     {
         var workersToRun = Configuration.GetSection("Workers:WorkersToRun").Value;
-        workersToRun = "";
         if (string.IsNullOrWhiteSpace(workersToRun))
         {
             services.AddTransient<IUpdateWorker, HotelLoader>();
@@ -85,7 +83,7 @@ public class Startup
             {                
                 if (workerName == nameof(HotelLoader))
                     services.AddTransient<IUpdateWorker, HotelLoader>();
-                if (workerName == nameof(HotelLoader))
+                if (workerName == nameof(AccommodationUpdater))
                     services.AddTransient<IUpdateWorker, AccommodationUpdater>();
             }
         }

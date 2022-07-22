@@ -41,17 +41,21 @@ public class HotelUpdater
 
         await _context.SaveChangesAsync();
         _context.ChangeTracker.Clear();
-    }
+    }    
 
 
-    public async Task DeactivateAllHotels(CancellationToken cancellationToken)
+    public async Task<DateTimeOffset> GetLastUpdateHotelDate(CancellationToken cancellationToken)
     {
-        var entityType = _context.Model.FindEntityType(typeof(Data.Models.Hotel));
-        var tableName = entityType.GetTableName();
+        var lastUpdateHotel = await _context.Hotels.OrderBy(x => x.Modified).FirstAsync(x => x.IsActive, cancellationToken);
 
-        await _context.Database.ExecuteSqlRawAsync($"UPDATE \"{tableName}\" SET \"IsActive\" = false",
-            cancellationToken: cancellationToken);
+        return lastUpdateHotel.Modified;
     }
+
+
+    public async Task<int> DeactivateNotFetched(DateTimeOffset modified, CancellationToken cancellationToken)
+       => await _context.Database.ExecuteSqlInterpolatedAsync(
+            @$"UPDATE ""Hotels"" SET ""IsActive"" = false WHERE ""IsActive"" = true AND ""Modified"" < {modified}",
+            cancellationToken);
 
 
     private readonly FastpayhotelsContext _context;

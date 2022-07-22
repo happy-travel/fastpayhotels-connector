@@ -39,18 +39,11 @@
     "id": 40006,
     "name": "StartingHotelsUpdate",
     "level": "Information",
-    "template": "Starting raw data hotels update with id '{updateId}'",
-    "argumentTypes": [ "int" ]
-  },
-  {
-    "id": 40007,
-    "name": "DeactivateAllHotels",
-    "level": "Information",
-    "template": "Deactivate all hotels",
+    "template": "Starting raw data hotels update",
     "argumentTypes": []
   },
   {
-    "id": 40008,
+    "id": 40007,
     "name": "HotelsLoaderException",
     "level": "Error",
     "template": "Hotelts loader: ",
@@ -58,19 +51,34 @@
     "hasException": true
   },
   {
-    "id": 40009,
+    "id": 40008,
     "name": "FinishHotelsUpdate",
     "level": "Information",
-    "template": "Finish raw data update with id '{updateId}'",
-    "argumentTypes": [ "int" ]
+    "template": "Finish raw data update",
+    "argumentTypes": []
+  },
+  {
+    "id": 40009,
+    "name": "HotelLoadException",
+    "level": "Error",
+    "template": "Hotel load exception",
+    "argumentTypes": [],
+    "hasException": true
   },
   {
     "id": 40010,
-    "name": "HotelLoadException",
+    "name": "HotelDetailException",
     "level": "Error",
-    "template": "Hotel load exception with code {hotelCode}: ",
-    "argumentTypes": [ "string" ],
+    "template": "Hotel detail exception",
+    "argumentTypes": [],
     "hasException": true
+  },
+  {
+    "id": 40011,
+    "name": "DeactivateHotels",
+    "level": "Information",
+    "template": "Deactivating hotels complete",
+    "argumentTypes": []
   },
   {
     "id": 40011,
@@ -88,14 +96,14 @@
     "hasException": true
   },
   {
-    "id": 40013,
+    "id": 40014,
     "name": "AccommodationUpdaterGetHotels",
     "level": "Information",
     "template": "Get hotels from DB. From {i} to {batchSizeInc}",
     "argumentTypes": [ "int", "int" ]
   },
   {
-    "id": 40014,
+    "id": 40015,
     "name": "HotelTimezoneError",
     "level": "Error",
     "template": "Get hotel timezone with code {hotelId}:",
