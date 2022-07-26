@@ -15,6 +15,7 @@ using HappyTravel.FastpayhotelsConnector.Api.Services.Availabilities.RoomContrac
 using HappyTravel.FastpayhotelsConnector.Api.Services.Availabilities.WideAvailabilities;
 using HappyTravel.FastpayhotelsConnector.Api.Services.Bookings;
 using HappyTravel.FastpayhotelsConnector.Api.Services.Locations;
+using HappyTravel.FastpayhotelsConnector.Common;
 using HappyTravel.FastpayhotelsConnector.Data;
 using HappyTravel.HttpRequestLogger;
 using HappyTravel.VaultClient;
@@ -45,7 +46,10 @@ public static class ServicesConfigurationExtensions
           .AddTransient<IRoomContractSetAvailabilityService, RoomContractSetAvailabilityService>()
           .AddTransient<IWideAvailabilitySearchService, WideAvailabilitySearchService>()
           .AddTransient<IBookingService, BookingService>()
-          .AddTransient<ILocationService, LocationService>();
+          .AddTransient<ILocationService, LocationService>()
+          .AddTransient<LocationMapper>()
+          .AddTransient<FastpayhotelsSerializer>()
+          .AddTransient<MultilingualAccommodationMapper>();
 
         builder.Services.AddHealthChecks()
             .AddDbContextCheck<FastpayhotelsContext>();
