@@ -1,7 +1,7 @@
 ﻿using HappyTravel.FastpayhotelsConnector.Common;
 using HappyTravel.FastpayhotelsConnector.Common.Infrastructure.Environment;
-using HappyTravel.FastpayhotelsConnector.Common.Infrastructure.TokenHandler;
-using HappyTravel.FastpayhotelsConnector.Common.Models;
+using HappyTravel.FastpayhotelsConnector.Common.Infrastructure.Extensions;
+using HappyTravel.FastpayhotelsConnector.Common.Infrastructure.Options;
 using HappyTravel.FastpayhotelsConnector.Data;
 using HappyTravel.FastpayhotelsConnector.Updater.Infrastructure;
 using HappyTravel.VaultClient;
@@ -30,15 +30,14 @@ public class Startup
 
         services.AddHttpClient(HttpClientNames.FastpayhotelsClient, client =>
         {
-            client.BaseAddress = new Uri(apiConnectionOptions["catalogueUrl"]);            
-        })
-        .AddHttpMessageHandler<CatalogueTokenAuthHeaderHandler>();
+            client.BaseAddress = new Uri(apiConnectionOptions["catalogueEndPoint"]);
+        });
+
+        services.AddTokenAuthHeaderService(apiConnectionOptions["availabilityEndPoint"]);
 
         services.AddTransient<FastpayhotelsContext>();
         services.AddTransient<FastpayhotelsContentClient>();
-        services.AddTransient<FastpayhotelsSerializer>();        
-        services.AddTransient<CatalogueTokenAuthHeaderHandler>();
-        services.AddTransient<TokenProvider>();        
+        services.AddTransient<FastpayhotelsSerializer>();
 
         ConfigureWorkers(services);
 
