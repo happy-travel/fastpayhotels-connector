@@ -1,6 +1,5 @@
-﻿using HappyTravel.FastpayhotelsConnector.Api.Services;
-using HappyTravel.FastpayhotelsConnector.Common.Infrastructure.TokenHandler;
-using HappyTravel.FastpayhotelsConnector.Common.Models;
+﻿using HappyTravel.FastpayhotelsConnector.Common.Infrastructure.Extensions;
+using HappyTravel.FastpayhotelsConnector.Common.Infrastructure.Options;
 using HappyTravel.FastpayhotelsConnector.Data;
 using HappyTravel.HttpRequestAuditLogger.Extensions;
 using HappyTravel.HttpRequestLogger;
@@ -81,11 +80,10 @@ public static class ServiceCollectionExtensions
         var fukuokaOptions = vaultClient.Get(configuration["Fukuoka:Options"]).GetAwaiter().GetResult();
 
         ConfigureApiConnectionOptions();
-        ConfigureAvailabilityHttpClient();
+        ConfigureFastpayhotelsHttpClient();
 
         return services.AddTransient<FastpayhotelsShoppingClient>()
-            .AddTransient<AvailabilityTokenAuthHeaderHandler>()
-            .AddTransient<TokenProvider>();
+            .AddTokenAuthHeaderService(apiConnectionOptions["availabilityEndPoint"]);
 
 
         void ConfigureApiConnectionOptions()
@@ -99,19 +97,15 @@ public static class ServiceCollectionExtensions
             });
 
 
-        void ConfigureAvailabilityHttpClient()
+        void ConfigureFastpayhotelsHttpClient()
         {
-            services.AddHttpClient(HttpClientNames.FastpayhotelsAvailabilityClient, client =>
-            {
-                client.BaseAddress = new Uri(apiConnectionOptions["availabilityEndPoint"]);
-            })
-            .AddHttpMessageHandler<AvailabilityTokenAuthHeaderHandler>()
-            .AddHttpClientRequestLogging(configuration: configuration)
-            .UseHttpClientMetrics()
-            .AddHttpRequestAudit(options =>
-            {
-                options.Endpoint = fukuokaOptions["endpoint"];
-            });
+            services.AddHttpClient(HttpClientNames.FastpayhotelsAvailabilityClient)
+                .AddHttpClientRequestLogging(configuration: configuration)
+                .UseHttpClientMetrics()
+                .AddHttpRequestAudit(options =>
+                {
+                    options.Endpoint = fukuokaOptions["endpoint"];
+                });
         }
     }
 }
