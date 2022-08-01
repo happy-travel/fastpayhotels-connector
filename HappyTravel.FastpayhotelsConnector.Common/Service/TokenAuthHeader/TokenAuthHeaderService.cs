@@ -12,7 +12,12 @@ public class TokenAuthHeaderService
     }
 
 
-    public async Task<Result<string>> GetOrSetToken(CancellationToken cancellationToken)
+    /// <summary>
+    /// Getting a token from the cache. If there is no token in the cache, the token is requested from the supplier and stored in the cache.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<Result<string>> GetOrRequestToken(CancellationToken cancellationToken)
     {
         var token = await _tokenAuthHeaderStorage.Get();
 

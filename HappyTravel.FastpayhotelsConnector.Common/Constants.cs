@@ -10,5 +10,5 @@ public static class Constants
     public const string HeaderPassword = "password";
     public const string ApiVersion = "1";
     public const string FastpayhotelsTokenClient = "FastpayhotelsTokenClient";
-    public static readonly TimeSpan AuthTokenLifeTime = TimeSpan.FromDays(400); // The access token has a validity of 400 days 
+    public static readonly TimeSpan AuthTokenLifeTimeDays = TimeSpan.FromDays(400); // The access token has a validity of 400 days 
 }

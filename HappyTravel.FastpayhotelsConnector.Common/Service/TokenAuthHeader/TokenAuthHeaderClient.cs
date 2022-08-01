@@ -15,25 +15,32 @@ public class TokenAuthHeaderClient
     }
 
 
+    /// <summary>
+    /// Returns the token required to authorize the suppliers's API.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<Result<string>> GetAgencyRolToken(CancellationToken cancellationToken)
     {
         const string endPoint = "/security/token";
 
-        var content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>()
-        {
-            new KeyValuePair<string, string>(Constants.HeaderGrandtype, HeaderGrandtypeValue),
-            new KeyValuePair<string, string>(Constants.HeaderClientId, _apiConnection.ClientId),
-            new KeyValuePair<string, string>(Constants.HeaderClientSecret, _apiConnection.ClientSecret),
-            new KeyValuePair<string, string>(Constants.HeaderVersion, Constants.ApiVersion),
-            new KeyValuePair<string, string>(Constants.HeaderUser, _apiConnection.UserName),
-            new KeyValuePair<string, string>(Constants.HeaderPassword, _apiConnection.Password)
-        });
-
-        var (isSuccess, _, tokenResponse, error) = await Post<TokenResponse>(new Uri(endPoint, UriKind.Relative), content, cancellationToken);
+        var (isSuccess, _, tokenResponse, error) = await Post<TokenResponse>(new Uri(endPoint, UriKind.Relative), GetСontent(), cancellationToken);
 
         return isSuccess
             ? tokenResponse.AccessToken
             : Result.Failure<string>(error);
+
+
+        FormUrlEncodedContent GetСontent()
+            => new(new List<KeyValuePair<string, string>>()
+            {
+                new(Constants.HeaderGrandtype, HeaderGrandtypeValue),
+                new(Constants.HeaderClientId, _apiConnection.ClientId),
+                new(Constants.HeaderClientSecret, _apiConnection.ClientSecret),
+                new(Constants.HeaderVersion, Constants.ApiVersion),
+                new(Constants.HeaderUser, _apiConnection.UserName),
+                new(Constants.HeaderPassword, _apiConnection.Password),
+            });
     }
 
 

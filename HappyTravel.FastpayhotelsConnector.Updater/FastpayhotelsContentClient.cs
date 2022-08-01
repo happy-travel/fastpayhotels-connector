@@ -29,7 +29,7 @@ public class FastpayhotelsContentClient
 
     private async Task<TResponse> Send<TResponse>(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var (_, isFailure, token, error) = await _tokenAuthHeaderService.GetOrSetToken(cancellationToken);
+        var (_, isFailure, token, error) = await _tokenAuthHeaderService.GetOrRequestToken(cancellationToken);
         if (isFailure)
             throw new Exception(error);
 
