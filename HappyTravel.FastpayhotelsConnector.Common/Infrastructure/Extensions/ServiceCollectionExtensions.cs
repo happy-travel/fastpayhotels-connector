@@ -15,7 +15,7 @@ namespace HappyTravel.FastpayhotelsConnector.Common.Infrastructure.Extensions
         /// <param name="tokenEndPoint">tokenEndPoint</param>
         /// <returns></returns>
         public static IServiceCollection AddTokenAuthHeaderService(this IServiceCollection services, string tokenEndPoint)
-        {
+        {             
             var httpMessageHandlerLifeTimeMinutes = TimeSpan.FromMinutes(5);
             const int RetryCount = 3;
 
