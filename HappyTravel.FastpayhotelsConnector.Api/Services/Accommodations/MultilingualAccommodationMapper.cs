@@ -18,10 +18,15 @@ public class MultilingualAccommodationMapper
     }
 
 
+    /// <summary>
+    /// Create <see cref="MultilingualAccommodation"/> by supplier hotel data.
+    /// </summary>
+    /// <param name="hotel">The hotel data received from the supplier</param>
+    /// <returns><see cref="MultilingualAccommodation"/></returns>
     public MultilingualAccommodation Map(Data.Models.Hotel hotel)
     {
         var deserializedData = _serializer.Deserialize<HotelDetails>(hotel.Data);
-
+        
         return new MultilingualAccommodation(
             supplierCode: hotel.Code,
             name: GetMultiLingualName(deserializedData),

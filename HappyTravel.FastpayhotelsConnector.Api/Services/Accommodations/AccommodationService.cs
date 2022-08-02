@@ -14,13 +14,21 @@ public class AccommodationService : IAccommodationService
     }
 
 
+    /// <summary>
+    /// Returns a list of accommodation details.
+    /// </summary>
+    /// <param name="skip">Skip count</param>
+    /// <param name="top">Take count</param>
+    /// <param name="modificationDate">Last modification date</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>List of accommodations</returns>
     public async Task<List<MultilingualAccommodation>> Get(int skip, int top, DateTimeOffset? modificationDate, CancellationToken cancellationToken)
     {
         var hotels = _context.Hotels.AsQueryable();
 
         if (modificationDate is not null)
             hotels = hotels.Where(a => a.Modified >= modificationDate);
-
+        
         return await hotels
             .OrderBy(h => h.Code)
             .Skip(skip)

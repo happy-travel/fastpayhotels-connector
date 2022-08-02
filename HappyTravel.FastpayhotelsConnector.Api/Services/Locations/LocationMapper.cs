@@ -14,6 +14,11 @@ public class LocationMapper
     }
 
 
+    /// <summary>
+    /// Create <see cref="Location"/> by <see cref="Accommodation"/>.
+    /// </summary>
+    /// <param name="accommodation">Accommodation</param>
+    /// <returns><see cref="Location"/></returns>
     public Location MapAccommodationToLocation(Accommodation accommodation)
     {
         return new Location(name: GetDefaultLocalizedName(accommodation.Name),
@@ -26,6 +31,12 @@ public class LocationMapper
     }
 
 
+    /// <summary>
+    /// Create <see cref="Location"/> by country and locality.
+    /// </summary>
+    /// <param name="country">Country</param>
+    /// <param name="locality">Locality</param>
+    /// <returns><see cref="Location"/></returns>
     public Location MapLocalityToLocation(string country, string locality)
     {
         return new Location(name: string.Empty,

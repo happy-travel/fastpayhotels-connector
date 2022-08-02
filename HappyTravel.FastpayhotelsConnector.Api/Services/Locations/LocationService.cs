@@ -15,6 +15,16 @@ public class LocationService : ILocationService
     }
 
 
+    /// <summary>
+    /// Returns a list of locations.
+    /// </summary>
+    /// <param name="modified">Last modified date</param>
+    /// <param name="locationType">Location type</param>
+    /// <param name="skip">Skip count</param>
+    /// <param name="top">Take count</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Location list</returns>
+    /// <exception cref="ArgumentException"></exception>
     public async Task<List<Location>> Get(DateTimeOffset modified, LocationTypes locationType, int skip, int top, CancellationToken cancellationToken)
     {
         return locationType switch
@@ -26,7 +36,7 @@ public class LocationService : ILocationService
             _ => throw new ArgumentException($"Invalid location type {locationType}")
         };
 
-
+        
         async Task<List<Location>> GetAccommodations()
         {
             var accommodations = await _context.Accommodations
